@@ -63,8 +63,6 @@ class ProjectsListView(ListView):
         for project in projects:
             projects_html += f'<li><a href="{project.id}/">{project.name}</a></li>'
         projects_html += '</ul>'
-
-        # Возвращаем HTML-код как HttpResponse
         return HttpResponse(projects_html)
 
 
