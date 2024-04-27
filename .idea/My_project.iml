@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="PYTHON_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/project_tracker/project_tracker" />
+      <excludeFolder url="file://$MODULE_DIR$/project_tracker/quality_control" />
+      <excludeFolder url="file://$MODULE_DIR$/project_tracker/tasks" />
+    </content>
+    <content url="file://$MODULE_DIR$/project_tracker/quality_control" />
+    <content url="file://$MODULE_DIR$/project_tracker/tasks" />
+    <orderEntry type="jdk" jdkName="Python 3.11 (My_project)" jdkType="Python SDK" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
