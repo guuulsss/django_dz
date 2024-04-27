@@ -1,13 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base/base.html' %}
+
+{% block content %}
     <h1>{{ features.title }}</h1>
     <p>Статус: {{ features.status }}</p>
     <p>Приоритет: {{ features.priority }}</p>
     <p>Описание: {{ features.description }}</p>
-</body>
-</html>
+{% endblock %}
