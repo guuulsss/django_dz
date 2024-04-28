@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.urls import reverse
 from .models import Project, Task
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 
 
 def index(request):
@@ -42,6 +42,56 @@ def project_detail(request, project_id):
 #         response_html += f'<li><a href="tasks/{task.id}/">{task.name}</a></li>'
 #     response_html += '</ul>'
 #     return HttpResponse(response_html)
+
+
+from .forms import FeedbackForm
+from django.core.mail import send_mail
+
+
+def feedback_view(request):
+    if request.method == 'POST':
+        form = FeedbackForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            email = form.cleaned_data['email']
+            message = form.cleaned_data['message']
+
+            recipients = ['info@example.com']
+            recipients.append(email)
+
+            send_mail(subject, message, email, recipients)
+
+            return redirect('/tasks')
+    else:
+        form = FeedbackForm()
+    return render(request, 'tasks/feedback.html', {'form': form})
+
+from .forms import ProjectForm
+
+def create_project(request):
+    if request.method == 'POST':
+        form = ProjectForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('tasks:projects_list')
+    else:
+        form = ProjectForm()
+    return render(request, 'tasks/project_create.html', {'form': form})
+
+from .forms import TaskForm
+
+def add_task_to_project(request, project_id):
+    project = get_object_or_404(Project, pk=project_id)
+    if request.method == 'POST':
+        form = TaskForm(request.POST)
+        if form.is_valid():
+            task = form.save(commit=False)
+            task.project = project
+            task.save()
+            return redirect('tasks:project_detail', project_id=project.id)
+    else:
+        form = TaskForm()
+    return render(request, 'tasks/add_task.html', {'form': form, 'project': project})
 
 def task_detail(request, project_id, task_id):
     task = get_object_or_404(Task, id=task_id, project_id=project_id)
