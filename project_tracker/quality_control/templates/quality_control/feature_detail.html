@@ -2,7 +2,14 @@
 
 {% block content %}
     <h1>{{ features.title }}</h1>
+
+
+
     <p>Статус: {{ features.status }}</p>
     <p>Приоритет: {{ features.priority }}</p>
     <p>Описание: {{ features.description }}</p>
+
+    <p><a href="{% url 'quality_control:update_feature' features.id %}">Изменить запрос на улучшение</a></p>
+
+    <p><a href="{% url 'quality_control:delete_feature' features.id %}"onclick="return confirm('Вы уверены, что хотите удалить этот запрос на улучшение?');">Удалить запрос на улучшение</a></p>
 {% endblock %}

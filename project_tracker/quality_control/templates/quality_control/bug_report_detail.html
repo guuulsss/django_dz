@@ -1,12 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base/base.html' %}
+
+{% block content %}
     <h1>{{ bug_report_list.title }}</h1>
     <p>Описание: {{ bug_report_list.description }}</p>
     <p>Приоритет: {{ bug_report_list.priority }}</p>
-</body>
-</html>
+
+    <p><a href="{% url 'quality_control:update_bug' bug_report_list.id %}">Изменить баг</a></p>
+    <p><a href="{% url 'quality_control:delete_bug' bug_report_list.id %}"onclick="return confirm('Вы уверены, что хотите удалить этот баг?');">Удалить баг</a></p>
+{% endblock %}

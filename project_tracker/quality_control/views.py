@@ -85,6 +85,38 @@ def create_feature_request(request):
         form = FeatureRequestForm()
     return render(request, 'quality_control/feature_create.html', {'form': form})
 
+def update_bug(request, bug_id):
+    bug = get_object_or_404(BugReport, pk=bug_id)
+    if request.method == 'POST':
+        form = BugReportForm(request.POST, instance=bug)
+        if form.is_valid():
+            form.save()
+            return redirect('quality_control:bug_report_detail', bug_id=bug.id)
+    else:
+        form = BugReportForm(instance=bug)
+    return render(request, 'quality_control/bug_update.html', {'form': form, 'bug': bug})
+
+def update_feature(request, feature_id):
+    feature = get_object_or_404(FeatureRequest, pk=feature_id)
+    if request.method == 'POST':
+        form = FeatureRequestForm(request.POST, instance=feature)
+        if form.is_valid():
+            form.save()
+            return redirect('quality_control:feature_detail', feature_id=feature.id)
+    else:
+        form = FeatureRequestForm(instance=feature)
+    return render(request, 'quality_control/feature_update.html', {'form': form, 'features': feature})
+
+def delete_bug(request, bug_id):
+    bug = get_object_or_404(BugReport, pk=bug_id)
+    bug.delete()
+    return redirect('quality_control:bug_report_list')
+
+def delete_feature(request, feature_id):
+    feature = get_object_or_404(FeatureRequest, pk=feature_id)
+    feature.delete()
+    return redirect('quality_control:feature_list', feature_id=feature_id)
+
 from django.views import View
 
 class IndexView(View):
@@ -133,6 +165,7 @@ class BugReportDetailView(DetailView):
     model = BugReport
     pk_url_kwarg = 'bug_id'
     template_name = 'quality_control/bug_report_detail.html'
+    context_object_name = 'bug_report_list'
 
 # class BugReportDetailView(DetailView):
 #     model = BugReport
@@ -167,7 +200,9 @@ class FeatureRequestListView(ListView):
 class FeatureRequestDetailView(DetailView):
     model = FeatureRequest
     pk_url_kwarg = 'feature_id'
+    context_object_name = 'features'
     template_name = 'quality_control/feature_detail.html'
+
 
 # class FeatureRequestDetailView(DetailView):
 #     model = FeatureRequest
@@ -183,3 +218,57 @@ class FeatureRequestDetailView(DetailView):
 #         response_html += f'<p>Project: {feature.project.name}</p>'
 #         response_html += f'<p>Task: {feature.task.name}</p>'
 #         return HttpResponse(response_html)
+
+from django.views.generic import CreateView
+from django.urls import reverse, reverse_lazy
+
+class BugReportCreateView(CreateView):
+    model = BugReport
+    form_class = BugReportForm
+    template_name = 'quality_control/bug_create.html'
+    success_url = reverse_lazy('quality_control:bug_report_list')
+
+
+from django.views.generic import CreateView
+from django.urls import reverse, reverse_lazy
+
+class FeatureRequestCreateView(CreateView):
+    model = FeatureRequest
+    form_class = FeatureRequestForm
+    template_name = 'quality_control/feature_create.html'
+    success_url = reverse_lazy('quality_control:feature_list')
+
+from django.views.generic.edit import UpdateView
+from django.urls import reverse_lazy
+
+class BugReportUpdateView(UpdateView):
+    model = BugReport
+    form_class = BugReportForm
+    template_name = 'quality_control/bug_update.html'
+    pk_url_kwarg = 'bug_id'
+    success_url = reverse_lazy('quality_control:bug_report_list')
+
+class FeatureRequestUpdateView(UpdateView):
+    model = FeatureRequest
+    form_class = FeatureRequestForm
+    template_name = 'quality_control/feature_update.html'
+    pk_url_kwarg = 'feature_id'
+    success_url = reverse_lazy('quality_control:feature_list')
+
+from django.views.generic.edit import DeleteView
+
+class BugReportDeleteView(DeleteView):
+    model = BugReport
+    pk_url_kwarg = 'bug_id'
+    context_object_name = 'bug_report_list'
+    success_url = reverse_lazy('quality_control:bug_report_list')
+    template_name = 'quality_control/bug_confirm_delete.html'
+
+from django.views.generic.edit import DeleteView
+
+class FeatureRequestDeleteView(DeleteView):
+    model = FeatureRequest
+    pk_url_kwarg = 'feature_id'
+    context_object_name = 'features'
+    success_url = reverse_lazy('quality_control:feature_list')
+    template_name = 'quality_control/feature_confirm_delete.html'

@@ -1,0 +1,12 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+    <h1>Удаление проекта</h1>
+    <p>Вы уверены, что хотите удалить проект "{{ bug_report_list.title }}"?</p>
+
+    <form action="{% url 'quality_control:delete_bug' bug_report_list.id %}" method="post">
+        {% csrf_token %}
+        <input type="submit" value="Удалить">
+        <a href="{% url 'quality_control:bug_report_detail' bug_report_list.id %}">Отмена</a>
+    </form>
+{% endblock %}
